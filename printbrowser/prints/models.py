@@ -35,8 +35,8 @@ class CreatedItem(models.Model):
     tier = models.CharField(max_length=1, choices=TIER_CHOICES, default=BASIC)
     mind = models.IntegerField()
     time = models.IntegerField()
-    materials_basic = models.ManyToManyField(BasicResource, symmetrical=False, blank=True)
-    materials_created = models.ManyToManyField('self', symmetrical=False, blank=True)
+    #materials_basic = models.ManyToManyField(BasicResourceMaterial, symmetrical=False, blank=True)
+    #materials_created = models.ManyToManyField(CreatedItemMaterial, symmetrical=False, blank=True)
     mechanics = models.CharField(max_length=200)
 
     class Meta:
@@ -44,3 +44,14 @@ class CreatedItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BasicResourceMaterial(BasicResource):
+    amount = models.IntegerField(default=1, null=False, blank=False)
+    used_in = models.ManyToManyField(CreatedItem, symmetrical=False, blank=True)
+
+
+class CreatedItemMaterial(CreatedItem):
+    amount = models.IntegerField(default=1, null=False, blank=False)
+    used_in = models.ManyToManyField('self', symmetrical=False, blank=True)
+
